@@ -12,15 +12,16 @@ class Customer(Content):
     type_title = _("Customer")
     add_permission = "Add %s" % type_name
     css_icon = "glyphicon glyphicon-briefcase"
+    blob_key = 'image'
 
     @property
     def image_data(self):
         blobs = IBlobs(self, None)
         if blobs:
-            return blobs.formdata_dict('image')
+            return blobs.formdata_dict(self.blob_key)
     @image_data.setter
     def image_data(self, value):
-        IBlobs(self).create_from_formdata('image', value)
+        IBlobs(self).create_from_formdata(self.blob_key, value)
 
 
 def includeme(config):
