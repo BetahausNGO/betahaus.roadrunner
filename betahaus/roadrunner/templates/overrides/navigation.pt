@@ -1,0 +1,34 @@
+<tal:main xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:metal="http://xml.zope.org/namespaces/metal"
+      xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:i18n="http://xml.zope.org/namespaces/i18n"
+      i18n:domain="Arche">
+<nav class="navbar navbar-default navbar-static-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <a class="navbar-brand" href="${request.application_url}">
+          RR
+      </a>
+    </div>
+      <ul class="nav navbar-nav">
+        <li>
+          <a href="#">Overview</a>
+        </li>
+        <li>
+        </li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li>
+          <a href="#" data-timer-title></a>
+        </li>
+        <li>
+          <p class="navbar-text" data-timer-slot></p>
+          <button style="display: none;" type="button" class="btn btn-default navbar-btn" data-timer-control="stop">
+            <span class="glyphicon glyphicon-stop text-danger"></span>
+          </button>
+        </li>
+        <tal:actionbar_items replace="structure view.render_view_group('nav_right')" />
+      </ul>
+  </div><!-- /.container-->
+</nav>
+</tal:main>

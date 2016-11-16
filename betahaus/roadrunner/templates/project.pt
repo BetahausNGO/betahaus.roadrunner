@@ -1,0 +1,72 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:metal="http://xml.zope.org/namespaces/metal"
+      xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:i18n="http://xml.zope.org/namespaces/i18n"
+      metal:use-macro="view.macro('arche:templates/base_view.pt', 'arche:templates/inline.pt')"
+      i18n:domain="betahaus.roadrunner">
+<body>
+<tal:main metal:fill-slot="main-content">
+
+  <h1>${context.title}</h1>
+
+  <p class="description lead"
+       tal:define="description context.description|None"
+       tal:condition="description"
+       tal:content="structure description">Description text</p>
+
+  <tal:iterate repeat="task tasks">
+  <div class="panel panel-default" tal:define="entries tuple(task.get_time_entries())">
+    <div class="panel-heading">
+      <div class="row">
+        <div class="col-xs-8">
+          <h3 class="panel-title">${task.title}</h3>
+        </div>
+        <div class="col-xs-4 text-right">
+          <a href="${request.route_url('timer_add_start', task_uid = task.uid)}"
+             class="btn btn-success"
+             data-add-task-timer>
+            <span class="glyphicon glyphicon-play"></span>
+          </a>
+        </div>
+      </div>
+    </div>
+    <div class="list-group">
+      <tal:iter repeat="entry entries">
+      <div tal:define="ecolor request.entry_color_cls(entry)"
+           class="list-group-item ${ecolor and 'list-group-item-%s' % ecolor or None}">
+        <form data-inline-edit method="post" action="${request.resource_url(entry, 'update')}">
+        <div class="row">
+          <div class="col-sm-5">
+            <a href="${request.resource_url(entry, 'edit')}">
+              <span class="glyphicon glyphicon-edit"></span>
+            </a>
+            ${entry.title}
+          </div>
+          <div class="col-sm-2">${entry.creator[0]}</div>
+          <div class="col-sm-1" tal:define="tariff view.resolve_uid(entry.tariff_uid)">${tariff.title|''}</div>
+          <div class="col-sm-3">
+            ${request.dt_handler.format_dt(entry.start_time, parts = 'd')}
+            <tal:other_date condition="entry.start_time.date() != entry.stop_time.date()|False">
+              -
+              ${request.dt_handler.format_dt(entry.stop_time, parts = 'd')}
+            </tal:other_date>
+            <div>
+              ${request.dt_handler.format_dt(entry.start_time, parts = 't')}
+              -
+              ${entry.stop_time and request.dt_handler.format_dt(entry.stop_time, parts = 't') or ''}
+            </div>
+          </div>
+          <div class="col-sm-1 text-right">${request.time_difference(entry.start_time, entry.stop_time)}</div>
+        </div>
+        </form>
+      </div>
+      </tal:iter>
+    </div>
+  </div>
+  </tal:iterate>
+
+
+
+</tal:main>
+</body>
+</html>

@@ -33,5 +33,7 @@ setup(name='betahaus.roadrunner',
       tests_require=requires,
       test_suite="betahaus.roadrunner",
       entry_points="""\
+      [fanstatic.libraries]
+      roadrunner = betahaus.roadrunner.fanstatic_lib:library
       """,
       )
