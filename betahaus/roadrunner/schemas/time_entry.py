@@ -23,7 +23,8 @@ def selectable_tariff_radio(node, kw):
 class TimeEntrySchema(colander.Schema):
     title = colander.SchemaNode(
         colander.String(),
-        title=_("Title")
+        title=_("Title"),
+        missing="",
     )
     tariff_uid = colander.SchemaNode(
         colander.String(),

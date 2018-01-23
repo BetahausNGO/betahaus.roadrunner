@@ -14,9 +14,13 @@
        tal:condition="description"
        tal:content="structure description">Description text</p>
 
-  <tal:iterate repeat="task tasks">
-    ${structure: view.render_template('betahaus.roadrunner:templates/task.pt', task=task)}
-  </tal:iterate>
+  <div class="list-group">
+    <tal:iterate repeat="project projects">
+      <div class="list-group-item">
+        <a href="${request.resource_url(project)}">${project.title}</a>
+      </div>
+    </tal:iterate>
+  </div>
 
 </tal:main>
 </body>

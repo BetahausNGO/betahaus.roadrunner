@@ -1,0 +1,17 @@
+<tal:main xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:metal="http://xml.zope.org/namespaces/metal"
+      xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:i18n="http://xml.zope.org/namespaces/i18n"
+      i18n:domain="betahaus.roadrunner">
+<li>
+  <a href="#" data-timer-title></a>
+</li>
+<li>
+  <p class="navbar-text" data-timer-slot></p>
+  <button style="display: none;" type="button" class="btn btn-default navbar-btn btn-xs" data-timer-control="stop">
+    &nbsp;
+    <span class="glyphicon glyphicon-stop text-danger"></span>
+    &nbsp;
+  </button>
+</li>
+</tal:main>
