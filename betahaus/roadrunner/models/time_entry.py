@@ -13,10 +13,8 @@ class TimeEntry(Base):
     type_title = _("Time entry")
     add_permission = "Add %s" % type_name
     css_icon = "glyphicon glyphicon-time"
-    creator = ""
     title = ""
     tariff_uid = ""
-    start_time = None
     stop_time = None
 
     @property
@@ -28,6 +26,16 @@ class TimeEntry(Base):
         else:
             if hasattr(self, '__creator__'):
                 delattr(self, '__creator__')
+
+    @property
+    def start_time(self):
+        #Map to created and set via created. It makes sense to link it to that
+        #attribute and use that catalog index.
+        return self.created
+
+    @property
+    def timedelta(self):
+        return self.stop_time - self.start_time
 
 
 def includeme(config):

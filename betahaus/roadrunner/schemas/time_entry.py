@@ -32,7 +32,7 @@ class TimeEntrySchema(colander.Schema):
         missing="",
         widget=selectable_tariff_radio,
     )
-    start_time = colander.SchemaNode(
+    created = colander.SchemaNode(
         LocalDateTime(),
         missing=None,
         widget=deform.widget.DateTimeInputWidget(time_options={'interval': 5}),
