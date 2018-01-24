@@ -9,3 +9,4 @@ def includeme(config):
     config.include('.task')
     config.include('.time_entry')
     config.include('.user')
+    config.include('.trello_api')
