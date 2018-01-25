@@ -11,6 +11,7 @@ class Task(Content):
     type_title = _("Task")
     add_permission = "Add %s" % type_name
     css_icon = "glyphicon glyphicon-tasks"
+    trello_card = ''
 
     def get_time_entries(self):
         results = []

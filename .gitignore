@@ -21,6 +21,7 @@ build
 *.pyc
 *.pt.py
 Data.fs*
+trello_api.json
 .tmp*
 *.egg-info
 .salt.txt

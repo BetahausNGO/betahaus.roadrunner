@@ -6,13 +6,24 @@ from pyramid.view import view_defaults
 
 from betahaus.roadrunner.interfaces import IProject
 from betahaus.roadrunner.interfaces import ITask
+from betahaus.roadrunner.models.task import Task
 
 
-@view_defaults(context = IProject)
+@view_defaults(context=IProject)
 class ProjectView(BaseView):
 
-    @view_config(renderer = "betahaus.roadrunner:templates/project.pt")
+    @view_config(renderer="betahaus.roadrunner:templates/project.pt")
     def main(self):
+        if self.request.GET.get('tasks_from_trello') and self.context.trello_board:
+            t_client = self.request.get_trello_client()
+            board = t_client.get_board(self.context.trello_board)
+            used_cards = self.context.used_cards
+            for l in board.list_lists():
+                for card in l.list_cards():
+                    if card.id in used_cards:
+                        continue
+                    new_task = Task(title=card.name, trello_card=card.id)
+                    self.context[new_task.uid] = new_task
         return {'tasks': tuple(self.get_tasks())}
 
     def get_tasks(self):

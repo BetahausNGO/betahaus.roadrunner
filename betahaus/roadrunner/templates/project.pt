@@ -14,6 +14,8 @@
        tal:condition="description"
        tal:content="structure description">Description text</p>
 
+  <a tal:condition="context.trello_board" class="btn btn-default" href="${request.resource_path(context, query={'tasks_from_trello': 1})}">Hämta uppgifter från Trellokort</a>
+
   <tal:iterate repeat="task tasks">
     ${structure: view.render_template('betahaus.roadrunner:templates/task.pt', task=task)}
   </tal:iterate>

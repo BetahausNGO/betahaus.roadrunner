@@ -25,4 +25,4 @@ class Customer(Content):
 
 
 def includeme(config):
-    config.add_content_factory(Customer, addable_to='Root')
+    config.add_content_factory(Customer, addable_to='Organisation')
