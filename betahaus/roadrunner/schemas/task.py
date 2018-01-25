@@ -17,11 +17,10 @@ def trello_card_widget(node, kw):
         board = kw['request'].get_trello_client().get_board(project.trello_board)
         current_task = isinstance(context, Task) and context or None
         used_cards = project.other_used_cards(current_task)
-        cards = filter(
-            lambda c: c.id not in used_cards,
-            [card for list in board.list_lists() for card in list.list_cards()]
-        )
-        values += [(card.id, card.name) for card in cards]
+        for l in board.list_lists():
+            for card in l.list_cards():
+                if card.id not in used_cards:
+                    values.append((card.id, card.name))
     return deform.widget.Select2Widget(values=values, multiple=False)
 
 
