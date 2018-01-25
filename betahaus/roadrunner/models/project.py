@@ -13,6 +13,7 @@ class Project(Content):
     add_permission = "Add %s" % type_name
     css_icon = "glyphicon glyphicon-road"
     blob_key = 'image'
+    trello_boards = ()
 
     @property
     def image_data(self):
@@ -25,4 +26,4 @@ class Project(Content):
 
 
 def includeme(config):
-    config.add_content_factory(Project, addable_to = 'Customer')
+    config.add_content_factory(Project, addable_to='Customer')

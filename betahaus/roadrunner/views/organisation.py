@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+from __future__ import unicode_literals
+
 from arche.security import PERM_VIEW
 from arche.views.base import BaseView
 from pyramid.traversal import resource_path
