@@ -11,7 +11,7 @@ from betahaus.roadrunner import _
 def trello_board_widget(node, kw):
     request = kw['request']
     values = [('', '- Ingen tavla -')]
-    for board in request.get_trello_client().list_boards():
+    for board in request.trello_client.list_boards():
         if request.root.catalog.query(Eq('trello_board', board.id))[0].total == 0 or \
            isinstance(kw['context'], Project) and board.id == kw['context'].trello_board:
             values.append((board.id, board.name))

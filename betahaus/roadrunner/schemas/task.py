@@ -14,7 +14,7 @@ def trello_card_widget(node, kw):
     project = find_interface(context, IProject)
     values = [('', '- Inget kort -')]
     if project.trello_board:
-        board = kw['request'].get_trello_client().get_board(project.trello_board)
+        board = kw['request'].trello_client.get_board(project.trello_board)
         current_task = isinstance(context, Task) and context or None
         used_cards = project.other_used_cards(current_task)
         for l in board.list_lists():

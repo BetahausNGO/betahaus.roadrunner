@@ -1,3 +1,7 @@
+from datetime import timedelta
+from datetime import datetime
+from pytz import utc
+
 from arche.api import Base
 from arche.interfaces import IIndexedContent
 from persistent.list import PersistentList
@@ -35,7 +39,13 @@ class TimeEntry(Base):
 
     @property
     def timedelta(self):
-        return self.stop_time - self.start_time
+        # type: () -> timedelta
+        if self.stop_time is None:
+            # TODO Get real timezone, yo
+            return datetime.now(utc) - self.start_time
+        else:
+            return self.stop_time - self.start_time
+
 
 
 def includeme(config):

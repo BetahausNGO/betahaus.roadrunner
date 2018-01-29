@@ -3,5 +3,5 @@
           xmlns:i18n="http://xml.zope.org/namespaces/i18n"
           i18n:domain="betahaus.roadrunner">
 #FIXME: List entries according to latest days
-    ${request.get_trello_client()}
+    ${request.trello_client}
 </tal:main>

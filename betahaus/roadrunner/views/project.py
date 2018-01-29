@@ -15,14 +15,19 @@ class ProjectView(BaseView):
     @view_config(renderer="betahaus.roadrunner:templates/project.pt")
     def main(self):
         if self.request.GET.get('tasks_from_trello') and self.context.trello_board:
-            t_client = self.request.get_trello_client()
-            board = t_client.get_board(self.context.trello_board)
+            self.request.trello_client.clear_cache()
+            board = self.request.trello_client.get_board(self.context.trello_board)
             used_cards = self.context.used_cards
             for l in board.list_lists():
                 for card in l.list_cards():
                     if card.id in used_cards:
                         continue
-                    new_task = Task(title=card.name, trello_card=card.id)
+                    new_task = Task(
+                        title=card.name,
+                        trello_card=card.id,
+                        card_estimated_hours=card.estimated_hours,
+                        card_consumed_hours=card.consumed_hours,
+                    )
                     self.context[new_task.uid] = new_task
         return {'tasks': tuple(self.get_tasks())}
 

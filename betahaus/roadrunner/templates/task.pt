@@ -32,6 +32,8 @@
                 <tal:iter repeat="(userid, timesum) request.sum_time(task).items()">
                     ${userid} ${request.format_delta(timesum)}
                 </tal:iter>
+                <p tal:condition="task.card_estimated_hours">Beräknad tid: ${task.card_estimated_hours} timmar</p>
+                <p tal:condition="task.consumed_hours">Använd tid: ${task.consumed_hours} timmar</p>
                 <p>
                     <a class="btn btn-primary" role="button"
                        data-toggle="collapse"
