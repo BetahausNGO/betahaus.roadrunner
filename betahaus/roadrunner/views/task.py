@@ -9,16 +9,42 @@ from betahaus.roadrunner.interfaces import ITask
 
 
 @view_defaults(context=ITask)
-class ProjectView(BaseView):
+class TaskView(BaseView):
+    update_fields = {
+        'title': 'name',
+        'card_estimated_hours': 'estimated_hours',
+        'card_consumed_hours': 'consumed_hours',
+    }
 
     # TODO Define subpath somehow
-    @view_config(renderer="json")
+    @view_config(name='update_card', renderer="json")
     def update_card(self):
-        if self.request.GET.get('update_trello_card') and self.context.trello_card:
-            card = self.request.trello_client.get_card(self.context.trello_card)
-            # TODO Update card from trello (no cache) to update estimated time and name
-            # TODO Then update consumed time on trello if differs from task hours
-        return {}
+        response = {
+            'updated_fields': {},
+            'trello_updated': False
+        }
+        if self.context.trello_card:
+            trello = self.request.trello_client
+            task = self.context
+            trello.cache_override()
+            card = trello.get_card(task.trello_card)
+
+            for field in self.update_fields:
+                value = getattr(card, self.update_fields[field])
+                if getattr(task, field) != value:
+                    setattr(task, field, value)
+                    response['updated_fields'][field] = str(value)
+
+            consumed_hours = task.consumed_hours
+            if card.consumed_hours != consumed_hours:
+                card.set_name(''.join((
+                    task.card_estimated_hours and '() '.format(task.card_estimated_hours) or '',
+                    task.title,
+                    consumed_hours and ' [{}]'.format(consumed_hours) or '',
+                )))
+                response['updated_fields']['consumed_hours'] = str(consumed_hours)
+                response['updated_trello'] = True
+        return response
 
 
 def includeme(config):

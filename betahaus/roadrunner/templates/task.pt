@@ -4,15 +4,17 @@
           i18n:domain="betahaus.roadrunner">
     <tal:defs tal:define="entries tuple(task.get_time_entries())">
 
-        <div class="panel panel-default">
+        <div class="panel panel-default" data-update-container>
             <div class="panel-heading">
                 <div class="row">
                     <div class="col-xs-10">
                         <h3 class="panel-title">
-                            ${task.title}
+                            <span data-update-name="title">${task.title}</span>
                             <a href="${request.resource_url(task, 'edit', query={'came_from': request.resource_url(context)})}">
                                 <span class="glyphicon glyphicon-edit"></span>
                             </a>
+                            <span class="label label-default"><span class="glyphicon glyphicon-hourglass"></span> <span data-update-name="card_estimated_hours">${task.card_estimated_hours or '?'}</span></span>
+                            <span class="label label-primary"><span class="glyphicon glyphicon-hourglass"></span> <span data-update-name="consumed_hours">${task.consumed_hours or '0'}</span></span>
                         </h3>
 
                     </div>
@@ -32,8 +34,6 @@
                 <tal:iter repeat="(userid, timesum) request.sum_time(task).items()">
                     ${userid} ${request.format_delta(timesum)}
                 </tal:iter>
-                <p tal:condition="task.card_estimated_hours">Beräknad tid: ${task.card_estimated_hours} timmar</p>
-                <p tal:condition="task.consumed_hours">Använd tid: ${task.consumed_hours} timmar</p>
                 <p>
                     <a class="btn btn-primary" role="button"
                        data-toggle="collapse"
@@ -42,6 +42,11 @@
                        aria-controls="details-${task.uid}">
                         Details...
                     </a>
+                    <button class="btn btn-default"
+                       data-update-json="${request.resource_path(task, 'update_card')}">
+                        <span class="glyphicon glyphicon-refresh"></span>
+                        Update card
+                    </button>
                 </p>
             </div>
         </div>

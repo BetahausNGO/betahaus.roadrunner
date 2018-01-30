@@ -10,7 +10,9 @@ from trello.card import Card
 
 
 def get_trello_client(request):
-    return request.registry.settings['trello_client']
+    client = request.registry.settings['trello_client']
+    client.cache_override(False)
+    return client
 
 
 def to_decimal(self, str):
@@ -36,16 +38,20 @@ def monkeypatch_card():
 
 
 class CachedTrelloClient(TrelloClient):
-    stupid_cache = {}
+    cache_storage = {}
+    _cache_override = False
 
     def fetch_json(self, uri_path, **kwargs):
         method = kwargs.get('http_method', 'GET')
-        if method != 'GET' or uri_path not in self.stupid_cache:
-            self.stupid_cache[uri_path] = super(CachedTrelloClient, self).fetch_json(uri_path, **kwargs)
-        return self.stupid_cache[uri_path]
+        if self._cache_override or method != 'GET' or uri_path not in self.cache_storage:
+            self.cache_storage[uri_path] = super(CachedTrelloClient, self).fetch_json(uri_path, **kwargs)
+        return self.cache_storage[uri_path]
+
+    def cache_override(self, state=True):
+        self._cache_override = state
 
     def clear_cache(self):
-        self.stupid_cache.clear()
+        self.cache_storage.clear()
 
 
 def includeme(config):
@@ -53,5 +59,5 @@ def includeme(config):
         trello_keys = json.load(tf)
     assert set(trello_keys.keys()) == {'api_key', 'api_secret', 'token', 'token_secret'}
     config.add_settings(trello_client=CachedTrelloClient(**trello_keys))
-    config.add_request_method(get_trello_client, name='trello_client', reify=True)
+    config.add_request_method(get_trello_client, name='trello_client', property=True)
     monkeypatch_card()

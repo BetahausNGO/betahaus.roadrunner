@@ -41,9 +41,9 @@ class Task(Content):
     @property
     def consumed_hours(self):
         # Returns time entry hours, rounded to full half hours
-        total_time = self.total_time
-        if total_time:
-            half_hours = Decimal(ceil(total_time.total_seconds() / 1800.0))
+        total = self.total_time
+        if total:
+            half_hours = Decimal(ceil(total.total_seconds() / 1800.0))
             return half_hours / 2
 
 

@@ -104,6 +104,17 @@ function delegate_event_timer(arg) {
     timer.update()
 }
 
+function update_from_json(event) {
+    var $button = $(event.currentTarget);
+    var $container = $button.closest('[data-update-container]');
+    $.get($button.data('updateJson')).
+    done(function(data) {
+        $.each(data.updated_fields, function(key, value) {
+            $container.find('[data-update-name="' + key + '"]').text(value);
+        });
+    })
+}
+
 $(document).ready(function () {
     timer.read();
     timer.initEventTimer(delegate_event_timer);
@@ -114,4 +125,5 @@ $(document).ready(function () {
     $('body').on('click', '[data-timer-control="stop"]', function(event) {
         timer.stopFromClick(event);
     });
+    $('[data-update-json]').click(update_from_json);
 });
