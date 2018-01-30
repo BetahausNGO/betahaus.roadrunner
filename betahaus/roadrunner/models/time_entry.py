@@ -1,5 +1,10 @@
 from datetime import timedelta
 from datetime import datetime
+
+from decimal import Decimal
+from math import ceil
+from typing import Iterable
+
 from pytz import utc
 
 from arche.api import Base
@@ -11,6 +16,17 @@ from betahaus.roadrunner import _
 from betahaus.roadrunner.interfaces import ITimeEntry
 
 
+def entries_to_consumed_hours(entries):
+    # type: (Iterable[TimeEntry]) -> Decimal
+    # Returns time entry hours, rounded to full half hours
+    total = timedelta()
+    for t in entries:
+        total += t.timedelta
+    if total:
+        half_hours = Decimal(ceil(total.total_seconds() / 1800.0))
+        return half_hours / 2
+
+
 @implementer(ITimeEntry, IIndexedContent)
 class TimeEntry(Base):
     type_name = "TimeEntry"
@@ -20,6 +36,7 @@ class TimeEntry(Base):
     title = ""
     tariff_uid = ""
     stop_time = None
+    billed = False
 
     @property
     def creator(self): return getattr(self, '__creator__', ())
@@ -45,7 +62,6 @@ class TimeEntry(Base):
             return datetime.now(utc) - self.start_time
         else:
             return self.stop_time - self.start_time
-
 
 
 def includeme(config):

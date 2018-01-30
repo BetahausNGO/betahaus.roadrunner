@@ -43,7 +43,7 @@ class CachedTrelloClient(TrelloClient):
 
     def fetch_json(self, uri_path, **kwargs):
         method = kwargs.get('http_method', 'GET')
-        if self._cache_override or method != 'GET' or uri_path not in self.cache_storage:
+        if self._cache_override or method != 'GET' or uri_path[:3] != '/c/' or uri_path not in self.cache_storage:
             self.cache_storage[uri_path] = super(CachedTrelloClient, self).fetch_json(uri_path, **kwargs)
         return self.cache_storage[uri_path]
 

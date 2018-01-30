@@ -14,7 +14,10 @@
        tal:condition="description"
        tal:content="structure description">Description text</p>
 
-  <a tal:condition="context.trello_board" class="btn btn-default" href="${request.resource_path(context, query={'tasks_from_trello': 1})}">Hämta uppgifter från Trellokort</a>
+  <p class="btn-group">
+    <a tal:condition="context.trello_board" class="btn btn-default" href="${request.resource_path(context, query={'tasks_from_trello': 1})}"><span class="glyphicon glyphicon-cloud-download"></span> Get tasks from Trello board</a>
+    <a tal:condition="context.trello_board" class="btn btn-default" href="${request.resource_path(context, query={'sync_trello_cards': 1})}"><span class="glyphicon glyphicon-refresh"></span> Sync Trello cards</a>
+  </p>
 
   <tal:iterate repeat="task tasks">
     ${structure: view.render_template('betahaus.roadrunner:templates/task.pt', task=task)}

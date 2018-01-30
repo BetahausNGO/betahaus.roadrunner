@@ -17,12 +17,15 @@ class Project(Content):
     trello_board = ""
 
     def other_used_cards(self, task=None):
-        other_tasks = [p for p in self.values() if isinstance(p, Task) and p != task]
-        return [t.trello_card for t in other_tasks if t]
+        other_tasks = filter(lambda t: t != task, self.tasks_with_card())
+        return [t.trello_card for t in other_tasks]
 
     @property
     def used_cards(self):
         return self.other_used_cards()
+
+    def tasks_with_card(self):
+        return filter(lambda t: isinstance(t, Task) and t.trello_card, self.values())
 
     @property
     def image_data(self):
@@ -32,6 +35,9 @@ class Project(Content):
     @image_data.setter
     def image_data(self, value):
         IBlobs(self).create_from_formdata(self.blob_key, value)
+
+    def consumed_hours(self, only_unbilled=True):
+        pass
 
 
 def includeme(config):

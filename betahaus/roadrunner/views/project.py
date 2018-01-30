@@ -30,6 +30,20 @@ class ProjectView(BaseView):
                         card_consumed_hours=card.consumed_hours,
                     )
                     self.context[new_task.uid] = new_task
+
+        if self.request.GET.get('sync_trello_cards'):
+            trello = self.request.trello_client
+            trello.cache_override()
+            for task in self.context.tasks_with_card():
+                card = trello.get_card(task.trello_card)
+                task.title = card.name
+                task.card_estimated_hours = card.estimated_hours
+                task.card_consumed_hours = card.consumed_hours
+
+                consumed_hours = task.consumed_hours
+                if card.consumed_hours != consumed_hours:
+                    card.set_name(str(task))
+
         return {'tasks': tuple(self.get_tasks())}
 
     def get_tasks(self):

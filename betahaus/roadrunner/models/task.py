@@ -10,6 +10,7 @@ from zope.interface import implementer
 
 from betahaus.roadrunner import _
 from betahaus.roadrunner.interfaces import ITask, ITimeEntry
+from betahaus.roadrunner.models.time_entry import entries_to_consumed_hours
 
 
 @implementer(ITask)
@@ -22,10 +23,10 @@ class Task(Content):
     card_estimated_hours = None
     card_consumed_hours = None
 
-    def get_time_entries(self):
+    def get_time_entries(self, only_unbilled=False):
         results = []
         for obj in self.values():
-            if ITimeEntry.providedBy(obj):
+            if ITimeEntry.providedBy(obj) and not (only_unbilled and obj.billed):
                 results.append(obj)
         return sorted(results, key=lambda x: x.start_time, reverse=True)
 
@@ -41,10 +42,20 @@ class Task(Content):
     @property
     def consumed_hours(self):
         # Returns time entry hours, rounded to full half hours
-        total = self.total_time
-        if total:
-            half_hours = Decimal(ceil(total.total_seconds() / 1800.0))
-            return half_hours / 2
+        return entries_to_consumed_hours(self.get_time_entries())
+
+    @property
+    def unbilled_hours(self):
+        # Returns time entry hours, rounded to full half hours
+        return entries_to_consumed_hours(self.get_time_entries(only_unbilled=True))
+
+    def __str__(self):
+        consumed_hours = self.consumed_hours
+        return ''.join((
+            self.card_estimated_hours and '({}) '.format(self.card_estimated_hours) or '',
+            self.title,
+            consumed_hours and ' [{}]'.format(consumed_hours) or '',
+        ))
 
 
 def includeme(config):

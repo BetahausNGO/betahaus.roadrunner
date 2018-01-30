@@ -7,24 +7,15 @@
 <body>
 <tal:main metal:fill-slot="main-content">
 
-  <h1>${context.title}</h1>
+  <h1>${context.title} <small><span class="glyphicon glyphicon-tasks"></span> customer report</small></h1>
 
   <p class="description lead"
        tal:define="description context.description|None"
        tal:condition="description"
        tal:content="structure description">Description text</p>
 
-  <p class="btn-group">
-    <a class="btn btn-default" href="${request.resource_path(context, 'report')}"><span class="glyphicon glyphicon-tasks"></span> Customer report</a>
-  </p>
-
-  <div class="list-group">
-    <tal:iterate repeat="project projects">
-      <div class="list-group-item">
-        <a href="${request.resource_url(project)}">${project.title}</a>
-      </div>
-    </tal:iterate>
-  </div>
+  <h2>Unbilled time</h2>
+  <p>${total_time}</p>
 
 </tal:main>
 </body>
