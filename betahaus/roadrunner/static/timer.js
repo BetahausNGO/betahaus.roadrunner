@@ -107,12 +107,20 @@ function delegate_event_timer(arg) {
 function update_from_json(event) {
     var $button = $(event.currentTarget);
     var $container = $button.closest('[data-update-container]');
-    $.get($button.data('updateJson')).
-    done(function(data) {
+    $button.addClass('updating');
+    $.get($button.data('updateJson'))
+    .done(function(data) {
         $.each(data.updated_fields, function(key, value) {
             $container.find('[data-update-name="' + key + '"]').text(value);
         });
     })
+    .fail(function() {
+        alert('Update failed');
+    })
+    .always(function() {
+        $button.removeClass('updating');
+        $button.blur();
+    });
 }
 
 $(document).ready(function () {
