@@ -38,7 +38,7 @@ class TaskView(BaseView):
             consumed_hours = task.consumed_hours
             if card.consumed_hours != consumed_hours:
                 card.set_name(''.join((
-                    task.card_estimated_hours and '() '.format(task.card_estimated_hours) or '',
+                    task.card_estimated_hours and '({}) '.format(task.card_estimated_hours) or '',
                     task.title,
                     consumed_hours and ' [{}]'.format(consumed_hours) or '',
                 )))
