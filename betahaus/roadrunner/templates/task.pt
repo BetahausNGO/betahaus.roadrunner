@@ -32,14 +32,16 @@
 
             <div class="panel-body">
                 <tal:iter repeat="(userid, timesum) request.sum_time(task).items()">
-                    ${userid} ${request.format_delta(timesum)}
+                    ${userid} ${request.format_delta(timesum)}<br/>
                 </tal:iter>
                 <p>
-                    <a class="btn btn-primary" role="button"
+                    <a class="btn btn-primary pull-right" role="button"
                        data-toggle="collapse"
                        href="#details-${task.uid}"
                        aria-expanded="false"
-                       aria-controls="details-${task.uid}">
+                       aria-controls="details-${task.uid}"
+                       tal:condition="entries">
+                        <span class="glyphicon glyphicon-menu-down"></span>
                         Details...
                     </a>
                     <button class="btn btn-default"
@@ -49,47 +51,47 @@
                     </button>
                 </p>
             </div>
-        </div>
 
-        <div class="collapse" id="details-${task.uid}">
+            <ul class="list-group collapse" id="details-${task.uid}">
 
-            <tal:iter repeat="entry entries">
-                <div tal:define="ecolor request.entry_color_cls(entry)"
-                     class="list-group-item ${ecolor and 'list-group-item-%s' % ecolor or None}">
-                    <div class="row">
-                        <div class="col-sm-5">
-                            <a href="${request.resource_url(entry, 'edit', query={'came_from': request.resource_url(context)})}">
-                                &nbsp;
-                                <span class="glyphicon glyphicon-edit"></span>
-                                &nbsp;
-                            </a>
-                            ${entry.title}
-                        </div>
-                        <div class="col-sm-2">${entry.creator[0]}</div>
-                        <div class="col-sm-1"
-                             tal:define="tariff view.resolve_uid(entry.tariff_uid)">
-                            ${tariff.title|''}
-                        </div>
-                        <div class="col-sm-3">
-                            ${request.dt_handler.format_dt(entry.start_time, parts = 'd')}
-                            <tal:other_date
-                                    condition="entry.start_time.date() != entry.stop_time.date()|False">
-                                -
-                                ${request.dt_handler.format_dt(entry.stop_time, parts = 'd')}
-                            </tal:other_date>
-                            <div>
-                                ${request.dt_handler.format_dt(entry.start_time, parts = 't')}
-                                -
-                                ${entry.stop_time and request.dt_handler.format_dt(entry.stop_time, parts = 't') or ''}
+                <tal:iter repeat="entry entries">
+                    <li tal:define="ecolor request.entry_color_cls(entry)"
+                         class="list-group-item ${ecolor and 'list-group-item-%s' % ecolor or None}">
+                        <div class="row">
+                            <div class="col-sm-4">
+                                <a href="${request.resource_url(entry, 'edit', query={'came_from': request.resource_url(context)})}">
+                                    &nbsp;
+                                    <span class="glyphicon glyphicon-edit"></span>
+                                    &nbsp;
+                                </a>
+                                ${entry.title}
+                            </div>
+                            <div class="col-sm-2">${entry.creator[0]}</div>
+                            <div class="col-sm-1"
+                                 tal:define="tariff view.resolve_uid(entry.tariff_uid)">
+                                ${tariff.title|''}
+                            </div>
+                            <div class="col-sm-3">
+                                ${request.dt_handler.format_dt(entry.start_time, parts = 'd')}
+                                <tal:other_date
+                                        condition="entry.start_time.date() != entry.stop_time.date()|False">
+                                    -
+                                    ${request.dt_handler.format_dt(entry.stop_time, parts = 'd')}
+                                </tal:other_date>
+                                <div>
+                                    ${request.dt_handler.format_dt(entry.start_time, parts = 't')}
+                                    -
+                                    ${entry.stop_time and request.dt_handler.format_dt(entry.stop_time, parts = 't') or ''}
+                                </div>
+                            </div>
+                            <div class="col-sm-2 text-right">
+                                ${request.format_delta(entry.timedelta)}
                             </div>
                         </div>
-                        <div class="col-sm-1 text-right">
-                            ${request.time_difference(entry.start_time, entry.stop_time)}
-                        </div>
-                    </div>
-                </div>
-            </tal:iter>
+                    </li>
+                </tal:iter>
 
+            </ul>
         </div>
 
     </tal:defs>

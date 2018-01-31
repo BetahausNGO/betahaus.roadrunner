@@ -14,8 +14,12 @@
        tal:condition="description"
        tal:content="structure description">Description text</p>
 
-  <h2>Unbilled time</h2>
-  <p>${total_time}</p>
+  <div class="panel panel-info">
+      <div class="panel-heading">Unbilled time: ${request.format_delta(total_time)}</div>
+      <ul class="list-group">
+          <li class="list-group-item" tal:repeat="(userid, timesum) request.sum_time(context).items()">${userid} ${request.format_delta(timesum)}</li>
+      </ul>
+  </div>
 
 </tal:main>
 </body>

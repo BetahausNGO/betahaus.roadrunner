@@ -36,6 +36,7 @@ class TimeEntry(Base):
     title = ""
     tariff_uid = ""
     stop_time = None
+    bill_hours = None
     billed = False
 
     @property
@@ -57,6 +58,8 @@ class TimeEntry(Base):
     @property
     def timedelta(self):
         # type: () -> timedelta
+        if self.bill_hours:
+            return timedelta(minutes=int(self.bill_hours*60))
         if self.stop_time is None:
             # TODO Get real timezone, yo
             return datetime.now(utc) - self.start_time

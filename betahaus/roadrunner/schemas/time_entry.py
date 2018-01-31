@@ -44,6 +44,11 @@ class TimeEntrySchema(colander.Schema):
         widget=deform.widget.DateTimeInputWidget(time_options={'interval': 5}),
         title=_("End time")
     )
+    bill_hours = colander.SchemaNode(
+        colander.Decimal(),
+        missing=None,
+        title=_("Bill hours")
+    )
 
 
 def includeme(config):

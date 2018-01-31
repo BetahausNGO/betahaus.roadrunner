@@ -66,7 +66,7 @@ def sum_time(request, context, userid=_marker):
             creator = obj.creator[0]
             if creator not in results:
                 results[creator] = timedelta()
-            results[creator] += obj.stop_time - obj.start_time
+            results[creator] += obj.timedelta
     return results
 
 
